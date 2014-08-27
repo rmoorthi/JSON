@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>You Tube API</title>
+<style>
+ul
+{
+	float:left;
+	margin-left:10px;
+	list-style:none;
+	height:400px;
+	overflow:scroll;
+}
+ul li img
+{
+	
+	border:2px solid #fff;
+	border-radius:10px;
+
+}
+div
+{
+	
+}
+</style>
+<script src="lib/jquery-1.11.0.min.js"></script>
+</head>
+
+<body>
+<ul id="vidList"></ul>
+<div id="videoPlayer"></div>
+<script>
+function listVideos(data)
+{
+	//console.log(data);
+	//console.log(data.feed.entry[0].title.$t);//Access description abt video (data.feed.entry[0].title.$t)
+	//console.log(data.feed.entry[0].media$group.media$thumbnail[0].url); //Access thumbnail of video 
+	//console.log(data.feed.entry[0].id.$t.substring(38));
+	//http://gdata.youtube.com/feeds/videos/gfVJrxTMnVE
+	
+	var output='';
+	for(var i=0;i<data.feed.entry.length;i++)
+	{
+		var title=data.feed.entry[i].title.$t;
+		var thumbnail=data.feed.entry[i].media$group.media$thumbnail[0].url;
+		//var description=data.feed.entry[0].media$group.media$description.$t;
+		var id=data.feed.entry[i].id.$t.substring(38);
+		//console.log(title);
+		
+		output +='<li>';
+		output +='<a href="#videoPlayer" onclick="playVideo(\''+id+'\',\''+title+'\')">';
+		
+		output +='<img src="' + thumbnail + '" width="80" height="80" alt="' + title + '"/>';
+		output +="</a>";
+		output +='</li>';
+	}
+	$('#vidList').html(output);
+}
+
+function playVideo(id,title)
+{
+	var output='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
+	output+='<br/><h2>'+title+'</h2>'
+	console.log(output);
+	$("#videoPlayer").html(output);
+}
+</script>
+<script src="http://gdata.youtube.com/feeds/users/rmoorthiit/uploads?alt=json-in-script&max-results=10&category=People&callback=listVideos"></script>
+
+
+</body>
+</html>
